@@ -1,0 +1,31 @@
+services:
+  simplisme-ide:
+    container_name: simplisme-ide
+    entrypoint: ["code-server", "--host", "0.0.0.0", "--port", "4000"]
+    build:         
+      args:
+        - GO_ARCH=${GO_ARCH}
+        - GO_VERSION=${GO_VERSION}
+        - TINYGO_ARCH=${TINYGO_ARCH}
+        - TINYGO_VERSION=${TINYGO_VERSION}
+        - EXTISM_ARCH=${EXTISM_ARCH}
+        - EXTISM_VERSION=${EXTISM_VERSION}
+        - SIMPLISM_DISTRO=${SIMPLISM_DISTRO} 
+        - SIMPLISM_VERSION=${SIMPLISM_VERSION}
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./workspace/.config:/root/.config
+      - ./workspace/projects:/home/coder/projects
+      - ./workspace/certs:/home/coder/certs
+      - ~/.ssh:/root/.ssh
+      #- /root/.ssh:/root/.ssh 
+      # go to 
+      # http://0.0.0.0:4000/?folder=/home/coder/projects
+      # https://golab.bots.garden:4000/?folder=/home/coder/projects
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    ports:
+      - 4000:4000 # Code Server HTTP port
+      - 8080:8080

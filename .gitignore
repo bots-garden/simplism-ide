@@ -1,0 +1,5 @@
+workspace/.config/go 
+workspace/projects/hello
+workspace/projects/hey
+workspace/projects/hello_world
+tmp
