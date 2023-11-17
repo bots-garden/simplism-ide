@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "workspace/projects"
+		}
+	],
+	"settings": {
+		"workbench.iconTheme": "material-icon-theme",
+		"workbench.colorTheme": "GitHub Dark Default",
+		"terminal.integrated.fontSize": 16,
+		"files.autoSave": "afterDelay",
+		"files.autoSaveDelay": 1000
+	}
+}
