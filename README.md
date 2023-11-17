@@ -1,7 +1,5 @@
 # Simplism IDE
 
-![logo](imgs/small-logo.jpeg "logo")
-
 ## What is Simplism IDE?
 
 Simplism IDE is a "local cloud development environment" (*) to develop [Extism](https://extism.org/) plug-ins for the [Simplism](https://github.com/bots-garden/simplism#simplism-a-tiny-http-server-for-extism-plug-ins) HTTP server without the need to install all the "complicated things".
