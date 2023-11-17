@@ -3,5 +3,7 @@
     "pkief.material-icon-theme",
     "pkief.material-product-icons",
     "aaron-bond.better-comments",
+    "golang.go",
+    "rust-lang.rust-analyzer",
   ]
 }
