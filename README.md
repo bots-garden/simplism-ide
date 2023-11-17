@@ -10,8 +10,8 @@ Simplism IDE is a "local cloud development environment" (*) to develop [Extism](
 
 > - ✋✋✋ Right now, Simplism IDE runs only on arm64 platforms (pull requests are welcome 🤗) 
 > - Otherwise, you can [🍊 Open it with Gitpod](https://gitpod.io/#https://github.com/bots-garden/simplism-ide)
->  - Open `simplism-ide.code-workspace`
->  - Click on <kbd>Open Workspace</kbd>
+>   - Open `simplism-ide.code-workspace`
+>   - Click on <kbd>Open Workspace</kbd>
 
 1. You need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 2. Next, clone this repository: `git clone https://github.com/bots-garden/simplism-ide.git`
