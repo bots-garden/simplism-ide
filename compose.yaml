@@ -12,6 +12,8 @@ services:
         - EXTISM_VERSION=${EXTISM_VERSION}
         - SIMPLISM_DISTRO=${SIMPLISM_DISTRO} 
         - SIMPLISM_VERSION=${SIMPLISM_VERSION}
+        - NODE_VERSION=v21.1.0
+        - NODE_DISTRO=linux-arm64
       context: ./
       dockerfile: Dockerfile
     volumes:

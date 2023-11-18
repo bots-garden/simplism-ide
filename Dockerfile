@@ -9,6 +9,9 @@ ARG EXTISM_VERSION=${EXTISM_VERSION}
 ARG SIMPLISM_DISTRO=${SIMPLISM_DISTRO}
 ARG SIMPLISM_VERSION=${SIMPLISM_VERSION}
 
+ARG NODE_VERSION=${NODE_VERSION}
+ARG NODE_DISTRO=${NODE_DISTRO}
+
 USER root 
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -118,6 +121,22 @@ simplism version
 EOF
 
 # ------------------------------------
+# Install NodeJS
+# ------------------------------------
+RUN <<EOF
+NODE_VERSION="${NODE_VERSION}"
+NODE_DISTRO="${NODE_DISTRO}"
+wget https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-${NODE_DISTRO}.tar.xz
+mkdir -p /usr/local/lib/nodejs
+tar -xJvf node-$NODE_VERSION-$NODE_DISTRO.tar.xz -C /usr/local/lib/nodejs
+rm node-$NODE_VERSION-$NODE_DISTRO.tar.xz
+EOF
+
+ENV VERSION="${NODE_VERSION}"
+ENV DISTRO="${NODE_DISTRO}"
+ENV PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
+
+# ------------------------------------
 # Install Extensions
 # ------------------------------------
 RUN <<EOF
@@ -129,4 +148,12 @@ code-server --install-extension rust-lang.rust-analyzer
 code-server --install-extension aaron-bond.better-comments
 code-server --install-extension GitHub.github-vscode-theme
 code-server --install-extension huytd.github-light-monochrome
+EOF
+
+
+# ------------------------------------
+# Install Yeoman
+# ------------------------------------
+RUN <<EOF
+npm install -g yo generator-code
 EOF
