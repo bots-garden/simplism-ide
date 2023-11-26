@@ -134,7 +134,12 @@ EOF
 
 ENV VERSION="${NODE_VERSION}"
 ENV DISTRO="${NODE_DISTRO}"
-ENV PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
+ENV NODE_PATH="/usr/local/lib/nodejs/node-$VERSION-$DISTRO"
+ENV PATH="$NODE_PATH/bin:$PATH"
+
+RUN echo "$NODE_PATH"
+RUN echo "export PATH=${NODE_PATH}/bin:${PATH}" >> /root/.bashrc
+
 
 # ------------------------------------
 # Install Extensions
@@ -150,9 +155,4 @@ code-server --install-extension GitHub.github-vscode-theme
 code-server --install-extension huytd.github-light-monochrome
 EOF
 
-# ------------------------------------
-# Install Yeoman
-# ------------------------------------
-RUN <<EOF
-npm install -g yo generator-code
-EOF
+

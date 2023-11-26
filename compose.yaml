@@ -19,11 +19,13 @@ services:
     volumes:
       - ./workspace/.config:/root/.config
       - ./workspace/projects:/home/coder/projects
+      - ./extension:/home/extension
       - ./workspace/certs:/home/coder/certs
       - ~/.ssh:/root/.ssh
       #- /root/.ssh:/root/.ssh 
       # go to 
       # http://0.0.0.0:4000/?folder=/home/coder/projects
+      # http://0.0.0.0:4000/?folder=/home/extension
       # https://golab.bots.garden:4000/?folder=/home/coder/projects
       - type: bind
         source: /var/run/docker.sock
