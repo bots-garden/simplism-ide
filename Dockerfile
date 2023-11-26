@@ -103,9 +103,10 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 export RUSTUP_HOME=~/.rustup
 export CARGO_HOME=~/.cargo
 export PATH=$PATH:$CARGO_HOME/bin
-curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh 
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 rustup target add wasm32-wasi
 EOF
+
 
 # ------------------------------------
 # Install Simplism
@@ -123,22 +124,22 @@ EOF
 # ------------------------------------
 # Install NodeJS
 # ------------------------------------
-RUN <<EOF
-NODE_VERSION="${NODE_VERSION}"
-NODE_DISTRO="${NODE_DISTRO}"
-wget https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-${NODE_DISTRO}.tar.xz
-mkdir -p /usr/local/lib/nodejs
-tar -xJvf node-$NODE_VERSION-$NODE_DISTRO.tar.xz -C /usr/local/lib/nodejs
-rm node-$NODE_VERSION-$NODE_DISTRO.tar.xz
-EOF
+#RUN <<EOF
+#NODE_VERSION="${NODE_VERSION}"
+#NODE_DISTRO="${NODE_DISTRO}"
+#wget https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-${NODE_DISTRO}.tar.xz
+#mkdir -p /usr/local/lib/nodejs
+#tar -xJvf node-$NODE_VERSION-$NODE_DISTRO.tar.xz -C /usr/local/lib/nodejs
+#rm node-$NODE_VERSION-$NODE_DISTRO.tar.xz
+#EOF
 
-ENV VERSION="${NODE_VERSION}"
-ENV DISTRO="${NODE_DISTRO}"
-ENV NODE_PATH="/usr/local/lib/nodejs/node-$VERSION-$DISTRO"
-ENV PATH="$NODE_PATH/bin:$PATH"
+#ENV VERSION="${NODE_VERSION}"
+#ENV DISTRO="${NODE_DISTRO}"
+#ENV NODE_PATH="/usr/local/lib/nodejs/node-$VERSION-$DISTRO"
+#ENV PATH="$NODE_PATH/bin:$PATH"
 
-RUN echo "$NODE_PATH"
-RUN echo "export PATH=${NODE_PATH}/bin:${PATH}" >> /root/.bashrc
+#RUN echo "$NODE_PATH"
+#RUN echo "export PATH=${NODE_PATH}/bin:${PATH}" >> /root/.bashrc
 
 
 # ------------------------------------
