@@ -5,3 +5,6 @@ workspace/projects/hello_world
 tmp
 # find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
 .DS_Store
+.local
+.cache
+go

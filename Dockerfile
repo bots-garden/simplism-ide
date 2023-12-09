@@ -1,5 +1,7 @@
 FROM codercom/code-server:latest
 
+USER root 
+
 ARG GO_ARCH=${GO_ARCH}
 ARG GO_VERSION=${GO_VERSION}
 ARG TINYGO_ARCH=${TINYGO_ARCH}
@@ -9,12 +11,16 @@ ARG EXTISM_VERSION=${EXTISM_VERSION}
 ARG SIMPLISM_DISTRO=${SIMPLISM_DISTRO}
 ARG SIMPLISM_VERSION=${SIMPLISM_VERSION}
 
-ARG NODE_VERSION=${NODE_VERSION}
-ARG NODE_DISTRO=${NODE_DISTRO}
+ARG NODE_MAJOR=${NODE_MAJOR}
 
-USER root 
+ARG USER_NAME=${USER_NAME}
 
 ARG DEBIAN_FRONTEND=noninteractive
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
+ENV LC_COLLATE=C
+ENV LC_CTYPE=en_US.UTF-8
 
 # Update the system and install necessary tools
 RUN <<EOF
@@ -37,21 +43,17 @@ rm go${GO_VERSION}.linux-${GO_ARCH}.tar.gz
 mv go /usr/local
 EOF
 
-#ENV PATH="/usr/bin/go/bin:$PATH"
 # ------------------------------------
 # Set Environment Variables for Go
 # ------------------------------------
-ENV GOROOT=/usr/local/go
-ENV GOPATH=$HOME/go
-ENV PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+#ENV GOROOT=/usr/local/go
+#ENV GOPATH=$HOME/go
+#ENV PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
-RUN <<EOF
-go version
-go install -v golang.org/x/tools/gopls@latest
-go install -v github.com/ramya-rao-a/go-outline@latest
-go install -v github.com/stamblerre/gocode@v1.0.0
-go install -v github.com/mgechev/revive@v1.3.2
-EOF
+# Set Go environment variables
+ENV PATH="/usr/local/go/bin:${PATH}"
+ENV GOPATH="/home/${USER_NAME}/go"
+ENV GOROOT="/usr/local/go"
 
 # ------------------------------------
 # Install TinyGo
@@ -63,20 +65,6 @@ TINYGO_VERSION="${TINYGO_VERSION}"
 wget https://github.com/tinygo-org/tinygo/releases/download/v${TINYGO_VERSION}/tinygo_${TINYGO_VERSION}_${TINYGO_ARCH}.deb
 dpkg -i tinygo_${TINYGO_VERSION}_${TINYGO_ARCH}.deb
 rm tinygo_${TINYGO_VERSION}_${TINYGO_ARCH}.deb
-EOF
-
-# ------------------------------------
-# Install Wasmtime, Wazero, Wasmer CLI
-# ------------------------------------
-RUN <<EOF
-curl https://wasmtime.dev/install.sh -sSf | bash
-
-curl https://wazero.io/install.sh | sh
-mv ./bin/wazero /usr/bin/wazero
-
-curl https://get.wasmer.io -sSfL | sh
-
-curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash
 EOF
 
 # ------------------------------------
@@ -95,18 +83,28 @@ extism --version
 EOF
 
 # ------------------------------------
-# Install Rust + Wasm Toolchain
+# Install NodeJS
 # ------------------------------------
-RUN <<EOF
-apt install -y pkg-config libssl-dev
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-export RUSTUP_HOME=~/.rustup
-export CARGO_HOME=~/.cargo
-export PATH=$PATH:$CARGO_HOME/bin
-curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-rustup target add wasm32-wasi
-EOF
+#RUN <<EOF
+#NODE_MAJOR=${NODE_MAJOR}
+#apt-get update && apt-get install -y ca-certificates curl gnupg
+#curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+#echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+#apt-get update && apt-get install nodejs -y
+#EOF
 
+# -----------------------
+# Install Extism JS PDK
+# -----------------------
+#RUN <<EOF
+#export EXTISM_JS_VERSION="${EXTISM_JS_VERSION}"
+#export EXTISM_JS_ARCH="${EXTISM_JS_ARCH}"
+#export EXTISM_JS_OS="${EXTISM_JS_OS}"
+#curl -L -O "https://github.com/extism/js-pdk/releases/download/v${EXTISM_JS_VERSION}/extism-js-${EXTISM_JS_ARCH}-${EXTISM_JS_OS}-v${EXTISM_JS_VERSION}.gz"
+#gunzip extism-js*.gz
+#chmod +x extism-js-*
+#mv extism-js-* /usr/local/bin/extism-js
+#EOF
 
 # ------------------------------------
 # Install Simplism
@@ -121,26 +119,39 @@ rm simplism.tar.gz
 simplism version
 EOF
 
+# Create a regular user
+RUN useradd -ms /bin/bash ${USER_NAME}
+
+# Set the working directory
+WORKDIR /home/${USER_NAME}
+
+# Set the user as the owner of the working directory
+RUN chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}
+
+# Switch to the regular user
+USER ${USER_NAME}
+
+
 # ------------------------------------
-# Install NodeJS
+# Install Rust + Wasm Toolchain
 # ------------------------------------
-#RUN <<EOF
-#NODE_VERSION="${NODE_VERSION}"
-#NODE_DISTRO="${NODE_DISTRO}"
-#wget https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-${NODE_DISTRO}.tar.xz
-#mkdir -p /usr/local/lib/nodejs
-#tar -xJvf node-$NODE_VERSION-$NODE_DISTRO.tar.xz -C /usr/local/lib/nodejs
-#rm node-$NODE_VERSION-$NODE_DISTRO.tar.xz
-#EOF
+RUN <<EOF
+apt install -y pkg-config libssl-dev
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+export RUSTUP_HOME=~/.rustup
+export CARGO_HOME=~/.cargo
+export PATH=$PATH:$CARGO_HOME/bin
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh 
+rustup target add wasm32-wasi
+EOF
 
-#ENV VERSION="${NODE_VERSION}"
-#ENV DISTRO="${NODE_DISTRO}"
-#ENV NODE_PATH="/usr/local/lib/nodejs/node-$VERSION-$DISTRO"
-#ENV PATH="$NODE_PATH/bin:$PATH"
 
-#RUN echo "$NODE_PATH"
-#RUN echo "export PATH=${NODE_PATH}/bin:${PATH}" >> /root/.bashrc
-
+RUN <<EOF
+go version
+go install -v golang.org/x/tools/gopls@latest
+go install -v github.com/ramya-rao-a/go-outline@latest
+go install -v github.com/stamblerre/gocode@v1.0.0
+EOF
 
 # ------------------------------------
 # Install Extensions
@@ -155,5 +166,8 @@ code-server --install-extension aaron-bond.better-comments
 code-server --install-extension GitHub.github-vscode-theme
 code-server --install-extension huytd.github-light-monochrome
 EOF
+
+# Command to run when starting the container
+#CMD ["/bin/bash"]
 
 
