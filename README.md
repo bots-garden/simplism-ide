@@ -16,7 +16,7 @@ Simplism IDE is a "local cloud development environment" (*) to develop [Extism](
 1. You need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 2. Next, clone this repository: `git clone https://github.com/bots-garden/simplism-ide.git`
 3. Run `docker compose up` into the `simplism-ide` directory
-4. Go to: http://0.0.0.0:4000/?folder=/home/coder/projects
+4. Go to: http://0.0.0.0:4000/?folder=/home/simplism-user/projects
 
 ## How to use it? (Write your first plug-in)
 

@@ -25,7 +25,6 @@ services:
       # go to 
       # http://0.0.0.0:4000/?folder=/home/${USER_NAME}/projects
       # http://0.0.0.0:4000/?folder=/home/simplism-user/projects
-      # https://golab.bots.garden:4000/?folder=/home/coder/projects
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
