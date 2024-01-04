@@ -1,8 +1,0 @@
-{
-  "recommendations": [
-    "pkief.material-icon-theme",
-    "aaron-bond.better-comments",
-    "golang.go",
-    "rust-lang.rust-analyzer"
-  ]
-}
