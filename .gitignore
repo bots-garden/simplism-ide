@@ -2,4 +2,6 @@ workspace
 tmp
 .DS_Store
 .config
-certs
+certs/*.crt
+certs/*.key
+
