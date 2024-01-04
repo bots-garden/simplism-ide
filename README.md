@@ -6,97 +6,58 @@ Simplism IDE is a "local cloud development environment" (*) to develop [Extism](
 
 > (*) but you can use it remotely
 
+The current version of Simplism is: `simplism v0.0.9 🐳 [spouting whale]`
+
 ## How to run it?
 
-> - ✋✋✋ Right now, Simplism IDE runs only on arm64 platforms (pull requests are welcome 🤗) 
+### With Docker Compose
+
+- The parameters (architecture and version of the installed softwares) are defined in the `.env`.
+  > I'm using a MacBook, so it's an arm platform, but you should be able to modifiy the settings for your platform (in th future I will provide more settings samples).
+
+1. You need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
+2. Next, clone this repository: `git clone https://github.com/bots-garden/simplism-ide.git`
+3. Run `docker compose up` into the `simplism-ide` directory (if you change something into `.docker/compose/Dockerfile`, you will need to run `docker compose build`)
+4. Go to: http://0.0.0.0:4010/?folder=/ide.simplism.cloud
+
+### With GitPod
 > - Otherwise, you can [🍊 Open it with Gitpod](https://gitpod.io/#https://github.com/bots-garden/simplism-ide)
 >   - Open `simplism-ide.code-workspace`
 >   - Click on <kbd>Open Workspace</kbd>
 
-1. You need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
-2. Next, clone this repository: `git clone https://github.com/bots-garden/simplism-ide.git`
-3. Run `docker compose up` into the `simplism-ide` directory
-4. Go to: http://0.0.0.0:4000/?folder=/home/simplism-user/projects
-
 ## How to use it? (Write your first plug-in)
 
-### Log-in
-> 👋 the default password is **`ilovepandas`**
-![login](imgs/01-log-in.png "login")
-
-> 🎉 Tada!
-![webide](imgs/02-web-ide.png "webide")
-
-### Generate a plug-in Rust project
-
-To generate a rust plug-in project, type the following command:
-```bash
-simplism generate rustlang hello_world .
-```
-![webide](imgs/03-generate.png "generate")
-
-You can, of course, change the source code (if needed, restart **rust-analyzer**).
-![source-code](imgs/04-source-code.png "source-code")
-
-### Build the project
-
-To build the project, type the following command:
-```bash
-cd hello_world
-./build.sh
-```
-It will produce a wasm file: `./target/wasm32-wasi/release/hello_world.wasm`
-![build](imgs/05-build.png "build")
-
-### Run Simplism to serve the wasm plug-in
-
-To build the project, type the following command:
-```bash
-cd hello_world
-./run.sh
-```
-![run](imgs/06-run.png "run")
-
-### Query the new "nano wasm service"
-
-To build the project, type the following command:
-```bash
-cd hello_world
-./query.sh
-```
-![query](imgs/07-query.png "query")
-
-✋ That's all 🤗
+To write a Simplism plug-in have a look to the Simplism documentation:
+- [Create and serve an Extism (wasm) plug-in](https://github.com/bots-garden/simplism/blob/main/docs/create-and-serve-wasm-plug-in.md)
+- [Create a JSON service with an Extism plug-in](https://github.com/bots-garden/simplism/blob/main/docs/create-json-service.md)
+- [Start an Simplism service from a configuration file](https://github.com/bots-garden/simplism/blob/main/docs/start-an-extism-service-with-config-file.md)
+- [Start all the Slimplism services from a config file with the Flock mode](https://github.com/bots-garden/simplism/blob/main/docs/use-the-flock-mode.md)
 
 ## How to
 
-### Change the password
-
-You need to edit `workspace/.config/code-server/config.yaml` and change the value of `password`:
-
-```yaml
-auth: password
-password: yourpassword
-```
-
 ### Add a TLS certificate
 
-- First, copy the certificate and the key to `workspace/certs`, 
-- Then, change the permissions of the 2 files: `chmod 777 your.domain.*`
-- Finally, edit `workspace/.config/code-server/config.yaml`:
-
-```yaml
-auth: password
-password: yourpassword
-cert: certs/your.domain.crt
-cert-key: certs/your.domain.key
+- First, copy the certificate and the key to `./certs`, 
+- Then, change the permissions of the 2 files: `chmod 777 ide.simplism.cloud.*` (change the name with your domain)
+- Create a directory of the `simplism-wizard` user:  `mkdir /home/simplism-wizard/certs`
+- Copy the certificate and the key to the `certs` directory: `cp certs/* /home/simplism-wizard/certs`
+- Create and copy a `config.yaml` file to `home/simplism-wizard/.config/code-server`:
+```bash
+cat > /home/simplism-wizard/.config/code-server/config.yaml <<- EOM
+bind-addr: 0.0.0.0:4010
+cert: certs/ide.simplism.cloud.crt
+cert-key: certs/ide.simplism.cloud.key
+EOM
 ```
+> change the name with your domain
 
-The new URL to the Simplism IDE will be: https://your.domain:4000/?folder=/home/coder/projects
+Then, update your `hosts` file:
+```text
+0.0.0.0 ide.simplism.cloud
+```
+Then, stop the services: `docker compose stop` and restart: `docker compose up`
 
-> 👋 don't forget **`https`**
+Now you can reach the Web IDE with:
+- https://ide.simplism.cloud:4010/?folder=/ide.simplism.cloud
 
-### Add your tools
-
-- Edit `Dockerfile`
-- Rebuild: `docker compose build`
+👋 if you use `docker compose down` you will loose the configuration.

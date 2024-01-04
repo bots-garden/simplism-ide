@@ -1,10 +1,5 @@
-workspace/.config/go 
-workspace/projects/hello
-workspace/projects/hey
-workspace/projects/hello_world
+workspace
 tmp
-# find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
 .DS_Store
-.local
-.cache
-go
+.config
+certs

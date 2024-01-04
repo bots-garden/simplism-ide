@@ -1,9 +1,16 @@
 image:
-  file: .gitpod.dockerfile
+  file: ./.docker/gitpod/.gitpod.dockerfile
 
 ports:
   - port: 8080
     visibility: public
+
+tasks:
+    - init: |
+        echo "init"
+      env:
+        SIMPLISM_DISTRO: Linux_arm64
+        SIMPLISM_VERSION: 0.0.9
 
 vscode:
   extensions:

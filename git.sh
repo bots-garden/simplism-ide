@@ -99,6 +99,8 @@ case $1 in
 
 esac
 
+find . -name '.DS_Store' -type f -delete
+
 if [ -z "$2" ]
 then
   # empty
