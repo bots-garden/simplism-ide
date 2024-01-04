@@ -29,7 +29,8 @@ services:
       dockerfile: Dockerfile
     init: true
     volumes:
-      - ~/.ssh:/root/.ssh
+      #- ~/.ssh:/root/.ssh
+      - ~/.ssh:/home/${USER_NAME}/.ssh
       - ~/.kube:/home/${USER_NAME}/.kube
       - .:/${WORKDIR}
       - ~/.gitconfig:/etc/gitconfig
