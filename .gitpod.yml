@@ -8,9 +8,9 @@ ports:
 tasks:
     - init: |
         echo "init"
-      env:
-        SIMPLISM_DISTRO: Linux_arm64
-        SIMPLISM_VERSION: 0.0.9
+      #env:
+      #  SIMPLISM_DISTRO: Linux_arm64
+      #  SIMPLISM_VERSION: 0.0.9
 
 vscode:
   extensions:
