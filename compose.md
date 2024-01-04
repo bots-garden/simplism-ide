@@ -3,7 +3,7 @@
 ## Config
 
 The default configuration is located in the `.env` file.
-I'm working on a `arm64` architecture. So, ff you need to adapt the values of the environment variables, create an new env file (ex: `arm.env`) and use the `--env-file` flag of Docker Compose.
+I'm working on a `arm64` architecture. So, ff you need to adapt the values of the environment variables, create an new env file (ex: `amd64.env`) and use the `--env-file` flag of Docker Compose.
 
 - Add `.config` to `.gitignore`
 
@@ -17,13 +17,13 @@ docker compose --env-file .env build
 ```bash
 # If you use .env
 docker compose up -d
-# If you use arm.env
-docker compose --env-file ./arm.env up  -d
+# If you use a specific .env file
+docker compose --env-file ./amd64.env up  -d
 ```
 Then: 
 - Open: http://0.0.0.0:4000
 - Open a terminal from the Web IDE
-- Type this command `git config --global --add safe.directory /cloud.simplism.dev`
+- Type this command `git config --global --add safe.directory /ide.simplism.cloud`
 - And configure **git** (if necessary):
   ```bash
   git config --global user.name @your-handle
@@ -32,8 +32,7 @@ Then:
 
 ### Connect to the container
 ```bash
-#set -o allexport; source .env; set +o allexport
-set -o allexport; source arm.env; set +o allexport
+set -o allexport; source .env; set +o allexport
 docker exec --workdir /${WORKDIR} -it ${CONTAINER_NAME} \
 /bin/bash
 ```
