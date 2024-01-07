@@ -6,7 +6,7 @@ Simplism IDE is a "local cloud development environment" (*) to develop [Extism](
 
 > (*) but you can use it remotely
 
-The current version of Simplism is: `simplism v0.0.9 🐳 [spouting whale]`
+The current version of Simplism is: `simplism v0.1.1 🐋 [whale]`
 
 ## How to run it?
 

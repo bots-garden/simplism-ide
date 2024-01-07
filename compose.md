@@ -21,7 +21,7 @@ docker compose up -d
 docker compose --env-file ./amd64.env up  -d
 ```
 Then: 
-- Open: http://0.0.0.0:4000
+- Open: http://0.0.0.0:4010
 - Open a terminal from the Web IDE
 - Type this command `git config --global --add safe.directory /ide.simplism.cloud`
 - And configure **git** (if necessary):
