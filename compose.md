@@ -20,17 +20,10 @@ docker compose up -d
 # If you use a specific .env file
 docker compose --env-file ./amd64.env up  -d
 ```
-Then: 
-- Open: http://0.0.0.0:4010
-- Open a terminal from the Web IDE
-- Type this command `git config --global --add safe.directory /ide.simplism.cloud`
-- And configure **git** (if necessary):
-  ```bash
-  git config --global user.name @your-handle
-  git config --global user.email your@e.mail
-  ```
+Then, open: http://0.0.0.0:4010
 
-### Connect to the container
+
+### Connect to the container from another host terminal
 ```bash
 set -o allexport; source .env; set +o allexport
 docker exec --workdir /${WORKDIR} -it ${CONTAINER_NAME} \
@@ -41,6 +34,16 @@ docker exec --workdir /${WORKDIR} -it ${CONTAINER_NAME} \
 ```bash
 docker compose down
 ```
+
+## Use Git
+
+- Open a terminal from the Web IDE
+- Type this command `git config --global --add safe.directory /ide.simplism.cloud`
+- And configure **git** (if necessary):
+  ```bash
+  git config --global user.name @your-handle
+  git config --global user.email your@e.mail
+  ```
 
 ## Docker in Docker
 

@@ -35,7 +35,6 @@ To write a Simplism plug-in have a look to the Simplism documentation:
 
 ## How to
 
-- Add a TLS certificate:
-- Use git:
+- [Use git](/compose.md#use-git)
 - [Use Docker in Docker](/compose.md#docker-in-docker)
-
+- [Add a TLS certificate](/compose.md#tls-certificates)
