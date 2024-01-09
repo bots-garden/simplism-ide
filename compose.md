@@ -45,3 +45,46 @@ docker compose down
 ## Docker in Docker
 
 If you get this error message: `permission denied while trying to connect to the Docker daemon socket`, use this before : `sudo chmod 666 /var/run/docker.sock`.
+
+
+## TLS certificates
+
+- You can use TLS certificates
+- You can use https://github.com/FiloSottile/mkcert
+
+### Use TLS certificates
+
+Update the `.env` file with the name of the certificate and the key:
+
+For example:
+```
+TLS_CERT=ide.simplism.cloud.crt
+TLS_CERT_KEY=ide.simplism.cloud.key
+```
+
+- Copy the certificate and the key to the `./certs` folder
+- Give the appropriates rights to the files: `chmod 777 ide.simplism.cloud.*`
+- Add this to your hosts file: `0.0.0.0 ide.simplism.cloud`
+- Use this entrypoint in the `compose.yaml` file: `entrypoint: ["code-server", "--cert", "/${WORKDIR}/certs/${TLS_CERT}", "--cert-key", "/${WORKDIR}/certs/${TLS_CERT_KEY}", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]`
+- Then, stop the services: `docker compose stop` and restart: `docker compose up`
+
+open https://ide.simplism.cloud:4010
+
+### Use Mkcert
+
+First install `mkcert` (https://github.com/FiloSottile/mkcert?tab=readme-ov-file#installation)
+Then:
+
+```bash
+cd certs
+mkcert -key-file pi.personal.faas.key -cert-file pi.personal.faas.crt personal.faas "*.personal.faas"
+mkcert -install
+chmod 777 pi.personal.faas.*
+```
+
+- Update the `.env` file with the name of the certificate and the key
+- Add this to the `hosts` file: `0.0.0.0 pi.personal.faas`
+- Use this entrypoint in the `compose.yaml` file: `entrypoint: ["code-server", "--cert", "/${WORKDIR}/certs/${TLS_CERT}", "--cert-key", "/${WORKDIR}/certs/${TLS_CERT_KEY}", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]`
+- Then, stop the services: `docker compose stop` and restart: `docker compose up`
+
+open https://pi.personal.faas:4010

@@ -35,29 +35,7 @@ To write a Simplism plug-in have a look to the Simplism documentation:
 
 ## How to
 
-### Add a TLS certificate
+- Add a TLS certificate:
+- Use git:
+- [Use Docker in Docker](/compose.md#docker-in-docker)
 
-- First, copy the certificate and the key to `./certs`, 
-- Then, change the permissions of the 2 files: `chmod 777 ide.simplism.cloud.*` (change the name with your domain)
-- Create a directory of the `simplism-wizard` user:  `mkdir /home/simplism-wizard/certs`
-- Copy the certificate and the key to the `certs` directory: `cp certs/* /home/simplism-wizard/certs`
-- Create and copy a `config.yaml` file to `home/simplism-wizard/.config/code-server`:
-```bash
-cat > /home/simplism-wizard/.config/code-server/config.yaml <<- EOM
-bind-addr: 0.0.0.0:4010
-cert: certs/ide.simplism.cloud.crt
-cert-key: certs/ide.simplism.cloud.key
-EOM
-```
-> change the name with your domain
-
-Then, update your `hosts` file:
-```text
-0.0.0.0 ide.simplism.cloud
-```
-Then, stop the services: `docker compose stop` and restart: `docker compose up`
-
-Now you can reach the Web IDE with:
-- https://ide.simplism.cloud:4010/?folder=/ide.simplism.cloud
-
-👋 if you use `docker compose down` you will loose the configuration.

@@ -2,6 +2,9 @@
 services:
   simplisme-ide:
     container_name: ${CONTAINER_NAME}
+    # https
+    #entrypoint: ["code-server", "--cert", "/${WORKDIR}/certs/${TLS_CERT}", "--cert-key", "/${WORKDIR}/certs/${TLS_CERT_KEY}", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]
+    # http
     entrypoint: ["code-server", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]
     environment:
       - ABOUT="Simplism Environment with Coder"
