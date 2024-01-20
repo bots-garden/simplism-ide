@@ -1,15 +1,15 @@
 # Simplism IDE
 services:
   simplisme-ide:
-    container_name: ${CONTAINER_NAME}
+    container_name: simplism-ide
     # https
-    #entrypoint: ["code-server", "--cert", "/${WORKDIR}/certs/${TLS_CERT}", "--cert-key", "/${WORKDIR}/certs/${TLS_CERT_KEY}", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]
+    #entrypoint: ["code-server", "--cert", "/workspace/certs/${TLS_CERT}", "--cert-key", "/workspace/certs/${TLS_CERT_KEY}", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/workspace"]
     # http
-    entrypoint: ["code-server", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]
+    entrypoint: ["code-server", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/workspace"]
     environment: &env
       - ABOUT="Simplism Environment with Coder"
       - CODER_HTTP_PORT=${CODER_HTTP_PORT}
-      - XDG_DATA_HOME=/${WORKDIR}/.config
+      - XDG_DATA_HOME=/workspace/.config
       # used by the https mode
       - LOCAL_DOMAIN=${LOCAL_DOMAIN}
       - TLS_CERT=${TLS_CERT}
@@ -32,14 +32,14 @@ services:
         - K9S_ARCH=${K9S_ARCH}    
         - CODER_VERSION=${CODER_VERSION}
         - CODER_ARCH=${CODER_ARCH}
-        - USER_NAME=${USER_NAME}
-      context: ./.docker/compose
+        - USER_NAME=simplism
+      context: ./.docker
       dockerfile: Dockerfile
-    volumes:
-      #- ~/.ssh:/root/.ssh
-      - ~/.ssh:/home/${USER_NAME}/.ssh
-      - ~/.kube:/home/${USER_NAME}/.kube
-      - .:/${WORKDIR}
+    platform: linux/${LINUX_ARCH}
+    volumes: &volumes
+      - ~/.ssh:/home/simplism/.ssh
+      - ~/.kube:/home/simplism/.kube
+      - .:/workspace
       - ~/.gitconfig:/etc/gitconfig
       - type: bind
         source: /var/run/docker.sock
@@ -50,10 +50,10 @@ services:
   simplism-ide-tasks:
     depends_on:
       - simplisme-ide
-    container_name: ${CONTAINER_NAME}-tasks
-    entrypoint: ["/${WORKDIR}/.tasks/init.sh"]
+    container_name: simplism-ide-tasks
+    entrypoint: ["/workspace/.tasks/init.sh"]
     environment: *env
     build: *build       
-    volumes:
-      - .:/${WORKDIR}
+    platform: linux/${LINUX_ARCH}
+    volumes: *volumes
 

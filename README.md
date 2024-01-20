@@ -6,24 +6,37 @@ Simplism IDE is a "local cloud development environment" (*) to develop [Extism](
 
 > (*) but you can use it remotely
 
-The current version of Simplism is: `simplism v0.1.1 🐋 [whale]`
+The current version of Simplism is: `simplism v0.1.1 🌕 [full moon]`
 
-## How to run it?
+## How to start Simplism IDE
+> - git clone this repository
+> - The parameters (architecture and version of the installed softwares) are defined in the `.env`.
 
-### With Docker Compose
+**Start Simplism IDEI**:
+```bash
+docker compose --env-file arm64.env up  -d
+# docker compose --env-file amd64.env up  -d
+```
+> - ✋ if you are on a arm architecture (mac silicon or linux arm) use `arm64.env`
+> - otherwise use `amd64.env`
 
-- The parameters (architecture and version of the installed softwares) are defined in the `.env`.
-  > I'm using a MacBook, so it's an arm platform, but you should be able to modifiy the settings for your platform (in th future I will provide more settings samples).
+Then go to: http://0.0.0.0:4060/?folder=/workspace
 
-1. You need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
-2. Next, clone this repository: `git clone https://github.com/bots-garden/simplism-ide.git`
-3. Run `docker compose up` into the `simplism-ide` directory (if you change something into `.docker/compose/Dockerfile`, you will need to run `docker compose build`)
-4. Go to: http://0.0.0.0:4010/?folder=/ide.simplism.cloud
+If you updated `./.docker/compose/Dockerfile` or get a new version of this project, run this command before starting the builder:
+```bash
+docker compose --env-file arm64.env build
+# docker compose --env-file amd64.env build
+```
 
-### With GitPod
-> - Otherwise, you can [🍊 Open it with Gitpod](https://gitpod.io/#https://github.com/bots-garden/simplism-ide)
->   - Open `simplism-ide.code-workspace`
->   - Click on <kbd>Open Workspace</kbd>
+**Stop the builder**:
+```bash
+docker compose --env-file arm64.env down
+# docker compose --env-file amd64.env down
+```
+
+## Add "tasks" at start of the Simplism IDE
+
+If you want to start some initial tasks (like installing VSCode extension) once the Simplism IDE container is started, you can update `./.tasks/init.sh`
 
 ## How to use it? (Write your first plug-in)
 
@@ -35,6 +48,60 @@ To write a Simplism plug-in have a look to the Simplism documentation:
 
 ## How to
 
-- [Use git](/compose.md#use-git)
-- [Use Docker in Docker](/compose.md#docker-in-docker)
-- [Add a TLS certificate](/compose.md#tls-certificates)
+### Add a TLS certificate
+
+Update the `*.env` files with the name of the certificate and the key:
+
+For example:
+```
+TLS_CERT=ide.simplism.cloud.crt
+TLS_CERT_KEY=ide.simplism.cloud.key
+```
+
+- Copy the certificate and the key to the `./certs` folder
+- Give the appropriates rights to the files: `chmod 777 ide.simplism.cloud.*`
+- Add this to your hosts file: `0.0.0.0 ide.simplism.cloud`
+- Use this entrypoint in the `compose.yaml` file: `entrypoint: ["code-server", "--cert", "/workspace/certs/${TLS_CERT}", "--cert-key", "/workspace/certs/${TLS_CERT_KEY}", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/workspace"]`
+
+open https://ide.simplism.cloud:4060
+
+### Use Mkcert to generate your own certificates
+
+Install [mkcert](https://github.com/FiloSottile/mkcert)
+
+> On macOS: `brew install mkcert`
+
+#### Create your own certificate authority and public key infrastructure
+
+```bash
+# just once
+# Install a new local CA in the system trust store
+mkcert -install
+```
+
+#### Generate certificate
+
+```bash
+cd certs
+mkcert \
+-cert-file pi.personal.faas.crt \
+-key-file pi.personal.faas.key \
+personal.faas "*.personal.faas" localhost 127.0.0.1 ::1
+```
+
+#### Update hosts file
+
+```bash
+0.0.0.0 pi.personal.faas
+```
+> the URL will be https://pi.personal.faas:4060
+
+### Use git
+
+ Open a terminal from the Web IDE
+- Type this command `git config --global --add safe.directory /ide.simplism.cloud`
+- And configure **git** (if necessary):
+  ```bash
+  git config --global user.name @your-handle
+  git config --global user.email your@e.mail
+  ```
