@@ -6,10 +6,15 @@ services:
     #entrypoint: ["code-server", "--cert", "/${WORKDIR}/certs/${TLS_CERT}", "--cert-key", "/${WORKDIR}/certs/${TLS_CERT_KEY}", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]
     # http
     entrypoint: ["code-server", "--auth", "none", "--host", "0.0.0.0", "--port", "${CODER_HTTP_PORT}", "/${WORKDIR}"]
-    environment:
+    environment: &env
       - ABOUT="Simplism Environment with Coder"
+      - CODER_HTTP_PORT=${CODER_HTTP_PORT}
       - XDG_DATA_HOME=/${WORKDIR}/.config
-    build:         
+      # used by the https mode
+      - LOCAL_DOMAIN=${LOCAL_DOMAIN}
+      - TLS_CERT=${TLS_CERT}
+      - TLS_CERT_KEY=${TLS_CERT_KEY}
+    build: &build        
       args:
         - GO_ARCH=${GO_ARCH}
         - GO_VERSION=${GO_VERSION}
@@ -30,7 +35,7 @@ services:
         - USER_NAME=${USER_NAME}
       context: ./.docker/compose
       dockerfile: Dockerfile
-    init: true
+    #init: true
     volumes:
       #- ~/.ssh:/root/.ssh
       - ~/.ssh:/home/${USER_NAME}/.ssh
@@ -43,3 +48,14 @@ services:
     ports:
       - ${CODER_HTTP_PORT}:${CODER_HTTP_PORT} # Code Server HTTP port
       #- 8080:8080
+
+  simplism-ide-tasks:
+    depends_on:
+      - simplisme-ide
+    container_name: ${CONTAINER_NAME}-tasks
+    entrypoint: ["/${WORKDIR}/.tasks/init.sh"]
+    environment: *env
+    build: *build       
+    volumes:
+      - .:/${WORKDIR}
+
