@@ -14,5 +14,5 @@ code-server --install-extension huytd.github-light-monochrome
 
 echo "🌍 open: http://0.0.0.0:${CODER_HTTP_PORT}"
 echo "🔐 if you activated https mode:" 
-echo "🌍  open: http://${LOCAL_DOMAIN}:${CODER_HTTP_PORT}"
+echo "🌍  open: https://${LOCAL_DOMAIN}:${CODER_HTTP_PORT}"
 
