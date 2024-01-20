@@ -4,4 +4,5 @@ tmp
 .config
 certs/*.crt
 certs/*.key
+samples
 

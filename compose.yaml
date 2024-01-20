@@ -35,7 +35,6 @@ services:
         - USER_NAME=${USER_NAME}
       context: ./.docker/compose
       dockerfile: Dockerfile
-    #init: true
     volumes:
       #- ~/.ssh:/root/.ssh
       - ~/.ssh:/home/${USER_NAME}/.ssh
@@ -47,7 +46,6 @@ services:
         target: /var/run/docker.sock
     ports:
       - ${CODER_HTTP_PORT}:${CODER_HTTP_PORT} # Code Server HTTP port
-      #- 8080:8080
 
   simplism-ide-tasks:
     depends_on:
