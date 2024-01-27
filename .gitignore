@@ -5,4 +5,6 @@ tmp
 certs/*.crt
 certs/*.key
 samples
+Icon
+
 
