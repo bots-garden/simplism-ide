@@ -6,5 +6,6 @@ certs/*.crt
 certs/*.key
 samples
 Icon\r
+Icon
 
 
